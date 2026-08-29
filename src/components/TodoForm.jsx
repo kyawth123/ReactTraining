@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import { useAddTodo } from '../hooks/useTodos'
+import useTodos from '../hooks/useTodos'
 
 const TodoForm = () => {
   const [todo, setTodo] = useState('')
   const [description, setDescription] = useState('')
-  const addTodo = useAddTodo()
+  const { addTodo } = useTodos()
 
   const handleSubmit = (e) => {
     e.preventDefault()

@@ -4,12 +4,12 @@ import { fetchTodos, createTodo, updateTodo, deleteTodo } from "../api/todos";
 import useTodoStore from "../stores/todoStore";
 
 const useTodos = () => {
-  const setTodos = useTodoStore((state) => state.setTodos);
+  const queryClient = useQueryClient();
+  const { setTodos, addTodo: addTodoStore, updateTodo: updateTodoStore, removeTodo } = useTodoStore();
 
   const query = useQuery({
     queryKey: ["todos"],
     queryFn: fetchTodos,
-    staleTime: Infinity
   });
 
   useEffect(() => {
@@ -18,47 +18,36 @@ const useTodos = () => {
     }
   }, [query.data, setTodos]);
 
-  return query;
-};
-
-const useAddTodo = () => {
-  const queryClient = useQueryClient();
-  const addTodo = useTodoStore((state) => state.addTodo);
-
-  return useMutation({
+  const addTodo = useMutation({
     mutationFn: createTodo,
     onSuccess: (newTodo) => {
-      addTodo(newTodo);
+      addTodoStore(newTodo);
       queryClient.invalidateQueries({ queryKey: ["todos"] });
     },
   });
-};
 
-const useUpdateTodo = () => {
-  const queryClient = useQueryClient();
-  const updateTodoStore = useTodoStore((state) => state.updateTodo);
-
-  return useMutation({
+  const updateTodoMutation = useMutation({
     mutationFn: ({ id, updates }) => updateTodo(id, updates),
     onSuccess: (updatedTodo, { id }) => {
       updateTodoStore(id, updatedTodo);
       queryClient.invalidateQueries({ queryKey: ["todos"] });
     },
   });
-};
 
-const useDeleteTodo = () => {
-  const queryClient = useQueryClient();
-  const removeTodo = useTodoStore((state) => state.removeTodo);
-
-  return useMutation({
+  const deleteTodoMutation = useMutation({
     mutationFn: deleteTodo,
     onSuccess: (_data, id) => {
       removeTodo(id);
       queryClient.invalidateQueries({ queryKey: ["todos"] });
     },
   });
+
+  return {
+    ...query,
+    addTodo,
+    updateTodo: updateTodoMutation,
+    deleteTodo: deleteTodoMutation,
+  };
 };
 
 export default useTodos;
-export { useAddTodo, useUpdateTodo, useDeleteTodo };

@@ -1,9 +1,8 @@
-import { useUpdateTodo, useDeleteTodo } from '../hooks/useTodos'
+import useTodos from '../hooks/useTodos'
 import useUIStore from '../stores/uiStore'
 
 const TodoItem = ({ todo }) => {
-  const updateTodo = useUpdateTodo()
-  const deleteTodo = useDeleteTodo()
+  const { updateTodo, deleteTodo } = useTodos()
   const { selectedTodoId, setSelectedTodoId } = useUIStore()
 
   const isSelected = selectedTodoId === todo.id
