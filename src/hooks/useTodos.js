@@ -5,7 +5,7 @@ import useTodoStore from "../stores/todoStore";
 
 const useTodos = () => {
   const queryClient = useQueryClient();
-  const { setTodos, addTodo: addTodoStore, updateTodo: updateTodoStore, removeTodo } = useTodoStore();
+  const { setTodos, addTodo: addTodoStore, updateTodo: updateTodoStore, removeTodo, searchQuery, filter ,executeFilter } = useTodoStore();
 
   const query = useQuery({
     queryKey: ["todos"],
@@ -15,8 +15,12 @@ const useTodos = () => {
   useEffect(() => {
     if (query.data) {
       setTodos(query.data);
+      executeFilter();
     }
-  }, [query.data, setTodos]);
+  }, [query.data, executeFilter, setTodos, filter, searchQuery]);
+  // useEffect works well without setTodos executeFilter in dependency array.
+  // ai says that every variable used inside useEffect should be listed in the dependency array. 
+  // This ensures the effect always has access to the latest values.
 
   const addTodo = useMutation({
     mutationFn: createTodo,

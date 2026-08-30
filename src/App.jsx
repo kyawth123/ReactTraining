@@ -1,17 +1,5 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import Layout from './components/Layout'
-import TodoListPage from './pages/TodoListPage'
-import AnotherPage from './AnotherPage'
-
-const router = createBrowserRouter([
-  {
-    element: <Layout />,
-    children: [
-      { path: '/', element: <TodoListPage /> },
-      { path: '/another', element: <AnotherPage /> },
-    ],
-  },
-])
+import { RouterProvider } from 'react-router-dom'
+import { router } from './app/router'
 
 const App = () => <RouterProvider router={router} />
 
