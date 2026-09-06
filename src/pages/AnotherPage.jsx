@@ -8,6 +8,7 @@ const AnotherPage = () => {
     <div>
         This is search query - {searchQuery}.
         This is filter - {filter}.
+        Hello world
     </div>
   )
 }
