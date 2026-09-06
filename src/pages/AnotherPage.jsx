@@ -1,8 +1,8 @@
-import useTodoStore from '../stores/todoStore';
+import useUIStore from '../stores/uiStore';
 
 const AnotherPage = () => {
 
-    const { searchQuery, filter } = useTodoStore();
+    const { searchQuery, filter } = useUIStore();
     
   return (
     <div>

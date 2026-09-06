@@ -1,11 +1,22 @@
 import useTodos from '../hooks/useTodos'
-import useTodoStore from '../stores/todoStore'
+import useUIStore from '../stores/uiStore'
 import TodoForm from './TodoForm'
 import TodoItem from '../components/TodoItem'
 
 const TodoListPage = () => {
-  const { isLoading, isError, error } = useTodos()
-  const { searchQuery, setSearchQuery, filter, setFilter, filteredTodos } = useTodoStore()
+  const { data: todos = [], isLoading, isError, error } = useTodos()
+  const searchQuery = useUIStore((state) => state.searchQuery);
+  const setSearchQuery = useUIStore((state) => state.setSearchQuery);
+  const filter = useUIStore((state) => state.filter);
+  const setFilter = useUIStore((state) => state.setFilter);
+
+  const filteredTodos = (todos ?? [])
+    .filter((todo) => todo.todo.toLowerCase().includes(searchQuery.toLowerCase()))
+    .filter((todo) => {
+      if (filter === 'finished') return todo.isFinished
+      if (filter === 'unfinished') return !todo.isFinished
+      return true
+    })
 
   if (isLoading) return <div>Loading...</div>
   if (isError) return <div>Error: {error.message}</div>

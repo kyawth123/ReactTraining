@@ -1,36 +1,30 @@
-import { useState } from 'react'
+import { useForm } from 'react-hook-form'
 import useTodos from '../hooks/useTodos'
 
 const TodoForm = () => {
-  const [todo, setTodo] = useState('')
-  const [description, setDescription] = useState('')
+  const { register, handleSubmit, reset } = useForm({
+    defaultValues: { todo: '', description: '' },
+  })
   const { addTodo } = useTodos()
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    if (!todo.trim()) return
+  const onSubmit = (data) => {
     addTodo.mutate(
-      { todo, description, isFinished: false },
+      { ...data, isFinished: false },
       {
-        onSuccess: () => {
-          setTodo('')
-          setDescription('')
-        },
+        onSuccess: () => reset(),
       }
     )
   }
 
   return (
-    <form onSubmit={handleSubmit} style={{ marginBottom: '1rem' }}>
+    <form onSubmit={handleSubmit(onSubmit)} style={{ marginBottom: '1rem' }}>
       <input
         placeholder="Todo title..."
-        value={todo}
-        onChange={(e) => setTodo(e.target.value)}
+        {...register('todo', { required: 'Title is required' })}
       />
       <input
         placeholder="Description..."
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
+        {...register('description')}
       />
       <button type="submit" disabled={addTodo.isPending}>
         {addTodo.isPending ? 'Adding...' : 'Add'}
